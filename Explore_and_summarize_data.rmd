@@ -4,7 +4,6 @@ Explore and Summarize data (red wine quality) by Nada Alsaab
 ```{r echo=FALSE, message=FALSE, warning=FALSE, packages}
 
 # Load all of the packages that you end up using in your analysis in this code
-
 library(ggplot2)
 library(dplyr)
 library(gridExtra)
@@ -13,6 +12,13 @@ library(GGally)
 library(reshape)
 library(plotly)
 library(rmarkdown)
+
+```
+
+```{r global_options, include=FALSE}
+
+# In HTML format avoid the additional info of the graphs and matrices
+knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message=FALSE)
 
 ```
 
@@ -27,16 +33,18 @@ wine_data$quality <- factor(wine_data$quality, order=TRUE)
 # Introduction
 In this project, Red Wine Quality data is used to know the relationship between the wine features.
 
-#Start_data_exloratory
+## Start data exloratory
 
 ```{r echo=FALSE, names}
 
+# Show the columns names
 names(wine_data)
 
 ```
 
 ```{r echo=FALSE, structure}
 
+# Show the data structure
 str(wine_data)
 
 ```
@@ -45,6 +53,7 @@ quality variable has two columns, one is ordinal and other is numeric.
 
 ```{r echo=FALSE, summary}
 
+# show the summary of the data
 summary(wine_data)
 
 ```
@@ -55,6 +64,7 @@ Median quality is 5.68, while mean quality is almost 6.64.
 
 ```{r echo=FALSE, fun}
 
+# Implement a function that drawing the histogram
 histogram_fun <- function(var, xlabel)
 {
   return(qplot(x=var, data=wine_data, xlab=xlabel))
@@ -65,95 +75,134 @@ histogram_fun <- function(var, xlabel)
 
 ```{r echo=FALSE, var1}
 
-histogram_fun(wine_data$fixed.acidity, 'fixed.acidity')
+# Call the histogram function with data of fixed.acidity
+histogram_fun(wine_data$fixed.acidity, 'fixed.acidity (tartaric acid - g / dm^3) ')
 
 ```
+
+
 This is a normal distributed data. The range of fixed acidity is between 4 and 16. The most fixed acidity is between 7 and 8.
+
 
 
 ```{r echo=FALSE, var2}
 
-histogram_fun(wine_data$volatile.acidity, 'volatile.acidity')
+# Call the histogram function with data of volatile.acidity
+histogram_fun(wine_data$volatile.acidity, 'volatile.acidity (acetic acid - g / dm^3)')
 
 ```
+
+
 This is a normal distributed data. The range of volatile acidity is between 0.1 and 1.6. The most volatile acidity is between 0.4 and 0.7.
+
 
 
 
 ```{r echo=FALSE, var3}
 
-histogram_fun(wine_data$citric.acid , 'citric.acid')
+# Call the histogram function with data of citric.acid
+histogram_fun(wine_data$citric.acid , 'citric.acid (g / dm^3)')
 
 ```
+
+
 This is a right skewed distribution. The range of the critic acid is between 0 and 1. 
+
+
 
 
 ```{r echo=FALSE, var4}
 
-histogram_fun(wine_data$residual.sugar, 'residual.sugar')
+# Call the histogram function with data of residual.sugar
+histogram_fun(wine_data$residual.sugar, 'residual.sugar (g / dm^3)')
 
 ```
+
+
 This is a right skewed distribution. The range of residual sugar is between 1 and 16. The most residual sugar is between 1.5 and 3.
 
 
 ```{r echo=FALSE, var5}
 
-histogram_fun(wine_data$chlorides , 'chlorides')
-
+# Call the histogram function with data of chlorides
+histogram_fun(wine_data$chlorides , 'chlorides (sodium chloride - g / dm^3)')
+ 
 ```
+
+
 This is a normal distribution. The range of chlorides is between 0.0 and 0.65. The most chlorides is between 0.05 and 0.1.
 
 
 ```{r echo=FALSE, var6}
 
-histogram_fun(wine_data$free.sulfur.dioxide , 'free.sulfur.dioxide')
+# Call the histogram function with data of free.sulfur.dioxide
+histogram_fun(wine_data$free.sulfur.dioxide , 'free.sulfur.dioxide (mg / dm^3)')
 
 ```
+
+
 This is a right skewed distribution. The range of free sulfur dioxide is between 0 and 72. The most free sulfur dioxide is between 1 and 10.
 
 ```{r echo=FALSE, var7}
 
-histogram_fun(wine_data$total.sulfur.dioxide , 'total.sulfur.dioxide')
+# Call the histogram function with data of total.sulfur.dioxide
+histogram_fun(wine_data$total.sulfur.dioxide , 'total.sulfur.dioxide (mg / dm^3)')
 
 ```
+
+
 This is a right skewed distribution. The range of the total sulfur dioxide is between 0 and 300. The most total sulfur dioxide is between 10 and 50.
 
 
 ```{r echo=FALSE, var8}
 
-histogram_fun(wine_data$density , 'density')
+# Call the histogram function with data of density
+histogram_fun(wine_data$density , 'density (g / cm^3)')
 
 ```
+
+
 This is a normal distribution. The range of density is between 0.99 and 1.005. The most density is between 0.995 and 1.
 
 ```{r echo=FALSE, var9}
 
+# Call the histogram function with data of pH
 histogram_fun(wine_data$pH , 'pH')
 
 ```
+
+
 This is a normal distribution. The range of pH is between 2.75 and 4.25. The most pH is between 3.25 and 3.5.
 
 
 ```{r echo=FALSE, var10}
 
-histogram_fun(wine_data$sulphates , 'sulphates')
+# Call the histogram function with data of sulphates
+histogram_fun(wine_data$sulphates , 'sulphates (potassium sulphate - g / dm3)')
 
 ```
+
+
 This is a normal distribution. The range of sulphates 0.25 and 2. The most sulphate is between 0.5 and 0.75.
 
 ```{r echo=FALSE, var11}
 
-histogram_fun(wine_data$alcohol , 'alcohol')
+# Call the histogram function with data of alcohol
+histogram_fun(wine_data$alcohol , 'alcohol (% by volume)')
 
 ```
+
+
 This is a right skewed distribution. The range of alcohol is between 8 and 15. The most alcohol is between 9 and 10.
 
 
 ```{r echo=FALSE, var12}
 
+# Call the histogram function with data of quality
 histogram_fun(wine_data$quality , 'quality')
 
 ```
+
 
 Quality is categorical, the range is between 3 and 8, the highest value is at 5.
 
@@ -163,14 +212,17 @@ good = (from 5 to 6)
 very good = > 6
 
 ```{r, recategorize}
+
 # Recategorize the quality as rank (low, good, very good)
 wine_data$rank <- ifelse(wine_data$quality < 5, 'low', ifelse(
   wine_data$quality < 7, 'good', 'very good'))
 wine_data$rank <- ordered(wine_data$rank, levels = c('low', 'good', 'very good'))
-summary(wine_data$rank)
+
+# Visualize the quality rank
 ggplot(data = wine_data, aes(x=rank, fill=rank)) +
   geom_bar() + theme_minimal() +
   scale_fill_brewer(type = 'seq', palette = 4)
+
 ```
 
 
@@ -198,51 +250,58 @@ The data set is tidy and good and I did not do anything to it. I use it as it is
 
 # Bivariate Plots Section
 
-```{r echo=FALSE, Bivariate_Plots}
+```{r echo=FALSE, message=FALSE, Bivariate_Plots, fig.width=12, fig.height=12}
 
-ggscatmat(wine_data, columns = 1:13) + theme_grey(base_size=10)
+names <- c('fixed.acidity', 'volatile.acidity', 'citric.acid', 'residual.sugar', 'chlorides', 'free.sulfur.dioxide', 'total.sulfur.dioxide', 'density', 'pH', 'sulphates', 'alcohol', 'quality2')
+ggscatmat(wine_data[names]) + theme_grey(base_size=10) 
 
 ```
+
+
 The higher absolute value of correlation coeffeceint, the higher the relationship between the two factors.
 From the matrix, we can notice that the highest absolute value of correlation coeffeceint is between pH and fixed.acidity with a value of -0.68. The second highest relationship is between density and fixed.acidity with 0.67, and also between citric.acid and fixed.acidity with 0.67.
 
-# pH vs fixed.acidity 
 ```{r, boxPlot1}
 
-# Box plot
+# Draw a box plot for pH and Fixed acidity
 ggplot(aes(x = pH, y = fixed.acidity), data = wine_data) +
-geom_point(position = position_jitter(h = 0), color="purple") +
+geom_point(position = position_jitter(h = 0), color="purple", alpha = 1/10) +
 stat_smooth(method = 'lm')+
 labs(title="pH VS Fixed acidity", 
-       x="pH", y ="Fixed acidity")
+       x="pH", y ="Fixed acidity (tartaric acid - g / dm^3)")
 
 ```
+
+
 From the figure above, we can notice that there is a negative strong relationship between pH and fixed.acidity
 
 # density vs fixed.acidity 
 ```{r,Mul pboxPlot2}
 
-# Box plot
+# Draw a box plot for Density and Fixed acidity
 ggplot(aes(x = density, y = fixed.acidity), data = wine_data) +
-geom_point(position = position_jitter(h = 0), color="purple") +
+geom_point(position = position_jitter(h = 0), color="purple", alpha = 1/10) +
 stat_smooth(method = 'lm') +
 labs(title="Density VS Fixed acidity", 
-       x="Density", y ="Fixed acidity")
+       x="Density (g / cm^3)", y ="Fixed acidity (tartaric acid - g / dm^3)")
 
 ```
+
+
 From the figure above, we can notice that there is a positive strong relationship between density and fixed.acidity
 
-# citric.acid vs fixed.acidity 
+
 ```{r, boxPlot3}
 
-# Box plot
+# Draw a box plot for Citric acid and Fixed acidity
 ggplot(aes(x = citric.acid, y = fixed.acidity), data = wine_data) +
-geom_point(position = position_jitter(h = 0), color="purple") +
+geom_point(position = position_jitter(h = 0), color="purple", alpha = 1/10) +
 stat_smooth(method = 'lm') +
 labs(title="Citric acid VS Fixed acidity", 
-       x="Citric acid", y ="Fixed acidity")
+       x="Citric acid (g / dm^3)", y ="Fixed acidity (tartaric acid - g / dm^3)")
 
 ```
+
 
 From the figure above, we can notice that there is a positive strong relationship between citric.acid and fixed.acidity
 
@@ -267,58 +326,73 @@ The strongest relationship between all the factors is between fixed.acidity and 
 
 ```{r, boxPlot4}
 
-# Box plot
+# Draw a box plot for Quality and Alcohol colorized by rank
 ggplot(aes(x = quality, y = alcohol), data = wine_data) +
-  geom_point(aes(color = rank, fill = rank), position = position_jitter(h = 0)) + geom_boxplot(alpha = 0.5) + scale_colour_brewer(palette=3)+
+  geom_point(aes(color = rank, fill = rank), position = position_jitter(h = 0), alpha = 1/3) + geom_boxplot(alpha = 0.5) + scale_colour_brewer(palette=3)+
 labs(title="Quality VS Alcohol", 
-       x="Quality", y ="Alcohol")
+       x="Quality", y ="Alcohol (% by volume)")
 
 ```
+
+
 We can notice from the figure above that the most distribution is in between 4.5 and 7.5. And there is a positive relationship between quality and alcohol.
 
-# quality vs volatile.acidity
+
 ```{r, boxPlot5}
-# Box plot
+
+# Draw a box plot for Quality and Volatile acidity colorized by rank
 ggplot(aes(x = quality, y = volatile.acidity), data = wine_data) +
-  geom_point(aes(color = rank, fill = rank), position = position_jitter(h = 0)) + geom_boxplot(alpha = 0.5) + scale_colour_brewer(palette=3)+
+  geom_point(aes(color = rank, fill = rank), position = position_jitter(h = 0), alpha = 1/3) + geom_boxplot(alpha = 0.5) + scale_colour_brewer(palette=3)+
   labs(title="Quality VS Volatile acidity", 
-       x="Quality", y ="Volatile acidity")
+       x="Quality", y ="Volatile acidity (acetic acid - g / dm^3)")
+
 ```
+
+
 We can notice from the figure above that the most distribution is in between 4.5 and 7.5. And there is a negative relationship between quality and volatile acidity.
 
 
 ```{r, boxPlot6}
-# Box plot
+
+# Draw a box plot for pH and Fixed acidity colorized by rank
 ggplot(aes(x = pH, y = fixed.acidity), data = wine_data) +
-geom_point(aes(color = rank, fill = rank), position = position_jitter(h = 0)) +
+geom_point(aes(color = rank, fill = rank), position = position_jitter(h = 0), alpha = 1/10) +
 stat_smooth(method = 'lm')+
 labs(title="pH VS Fixed acidity", 
-       x="pH", y ="Fixed acidity")
+       x="pH", y ="Fixed acidity (tartaric acid - g / dm^3)")
 
 ```
+
+
 From the figure above, we can notice that there is a negative strong relationship between pH and fixed acidity and the most rank is "good".
 
 ```{r, boxPlot7}
-# Box plot
+
+# Draw a box plot for Density and Fixed acidity colorized by rank
 ggplot(aes(x = density, y = fixed.acidity), data = wine_data) +
-geom_point(aes(color = rank, fill = rank), position = position_jitter(h = 0)) +
+geom_point(aes(color = rank, fill = rank), position = position_jitter(h = 0), alpha = 1/10) +
 stat_smooth(method = 'lm') +
 labs(title="Density VS Fixed acidity", 
-       x="Density", y ="Fixed acidity")
+       x="Density (g / cm^3)", y ="Fixed acidity (tartaric acid - g / dm^3)")
 
 ```
+
+
 From the figure above, we can notice that there is a positive strong relationship between density and fixed acidity. Also, we can notice that the "good" rank has the strongest relationship.
 
 
-# citric.acid vs fixed.acidity 
 ```{r, boxPlot8}
-# Box plot
+
+# Draw a box plot for Citric acid and Fixed acidity colorized by rank
 ggplot(aes(x = citric.acid, y = fixed.acidity), data = wine_data) +
-geom_point(aes(color = rank, fill = rank), position = position_jitter(h = 0)) +
+geom_point(aes(color = rank, fill = rank), position = position_jitter(h = 0), alpha = 1/10) +
 stat_smooth(method = 'lm') +
 labs(title="Citric acid VS Fixed acidity", 
-       x="Citric acid", y ="Fixed acidity")
+       x="Citric acid (g / dm^3)", y ="Fixed acidity (tartaric acid - g / dm^3)")
+
 ```
+
+
 From the figure above, we can notice that there is a positive strong relationship between citric.acid and fixed acidity. 
 
 
@@ -327,9 +401,10 @@ From the figure above, we can notice that there is a positive strong relationshi
 ### Talk about some of the relationships you observed in this part of the \
 investigation. Were there features that strengthened each other in terms of \
 looking at your feature(s) of interest?
+I found that there is a strong negative relationship between pH and fixed.acidity, it is most strong for good rank. Also, there is a strong positive relationship between density and fixed.acidity and most strong for good rank.
 
 ### Were there any interesting or surprising interactions between features?
-
+That alcohol increase the wine quality while volatile acidity decrease it.
 
 ### OPTIONAL: Did you create any models with your dataset? Discuss the \
 strengths and limitations of your model.
@@ -341,11 +416,7 @@ strengths and limitations of your model.
 ### Plot One
 ```{r , plot1}
 
-# Recategorize the quality as rank (low, good, very good)
-wine_data$rank <- ifelse(wine_data$quality < 5, 'low', ifelse(
-  wine_data$quality < 7, 'good', 'very good'))
-wine_data$rank <- ordered(wine_data$rank, levels = c('low', 'good', 'very good'))
-summary(wine_data$rank)
+# Visualize the quality rank
 ggplot(data = wine_data, aes(x=rank, fill=rank)) +
   geom_bar() + theme_minimal() +
   scale_fill_brewer(type = 'seq', palette = 4)
@@ -357,10 +428,13 @@ Snice quality has 6 categoried which is as a number, I decide to recategorize th
 
 ### Plot Two
 ```{r, plot2}
-# Box plot
+
+# Draw a box plot for fixed.acidity and pH
 ggplot(aes(x = pH, y = fixed.acidity), data = wine_data) +
-geom_point(position = position_jitter(h = 0), color="purple") +
+geom_point(position = position_jitter(h = 0), color="purple", alpha = 1/10) +
 stat_smooth(method = 'lm')
+labs(title="pH VS Fixed acidity", 
+       x="pH", y ="Fixed acidity (tartaric acid - g / dm^3)")
 
 ```
 
@@ -370,12 +444,13 @@ The correlation coefficient between pH and Fixed acidity is negative and that in
 
 ### Plot Three
 ```{r, plot3}
-# Box plot
+
+# Draw a box plot for fixed.acidity and pH colorized by rank
 ggplot(aes(x = pH, y = fixed.acidity), data = wine_data) +
-geom_point(aes(color = rank, fill = rank), position = position_jitter(h = 0)) +
+geom_point(aes(color = rank, fill = rank), position = position_jitter(h = 0), alpha = 1/10) +
 stat_smooth(method = 'lm')+
 labs(title="pH VS Fixed acidity", 
-       x="pH", y ="Fixed acidity")
+       x="pH", y ="Fixed acidity (tartaric acid - g / dm^3)")
 
 ```
 
